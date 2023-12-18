@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+
+    # nginx
+    nginx-service:
+        image: nginx:stable-alpine
+        container_name: lara-jwt-nginx
+        ports:
+            - "7617:80"
+        volumes:
+            - ./:/var/www/project
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php82-service
+            - mariadb
+
+    # php
+    php82-service:
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+        container_name: lara-jwt-php
+        ports:
+            - "9417:9000"
+        volumes:
+            - ./:/var/www/project
+
+    # mysql
+    mariadb:
+        image: mariadb
+        container_name: lara-jwt-mariadb
+        ports:
+            - "3806:3306"
+        volumes:
+            - ./docker/mysql:/var/lib/mysql
+        command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        #restart: always
+        environment:
+            #MYSQL_USER: root
+            MYSQL_ROOT_PASSWORD: root
+            #MYSQL_PASSWORD: root
+
+    # mailhog
+    # mailhog:
+    #     image: mailhog/mailhog
+    #     container_name: mailhog-container-lara-jwt
+    #     logging:
+    #       driver: 'none'  # disable saving logs
+    #     ports:
+    #       - 1045:1025 # smtp server
+    #       - 8045:8025 # web ui

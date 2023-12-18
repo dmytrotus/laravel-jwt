@@ -1,0 +1,3 @@
+## Laravel + JWT token example app
+
+Discription will be later.....
