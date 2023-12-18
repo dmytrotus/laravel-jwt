@@ -10,7 +10,8 @@ class JwtController extends Controller
     public function secretApiData(): JsonResponse
     {
         return response()->json([
-            'data' => 'some secret data'
+            'data' => 'some secret data',
+            'user' => auth()->user(),
         ], 200);
     }
 }
